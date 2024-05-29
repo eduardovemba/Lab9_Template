@@ -54,16 +54,45 @@ int queueDestroy(PtQueue *ptQueue) {
 }
 
 
-int queueEnqueue(PtQueue queue, QueueElem elem) { 
-	return -1;
+int queueEnqueue(PtQueue queue, QueueElem elem) {
+    if (queue == NULL) return QUEUE_NULL;
+
+    if (queue->size == queue->capacity) {
+        int newCapacity = queue->capacity * 2;
+        QueueElem *newArray = (QueueElem*) realloc(queue->elements, newCapacity * sizeof(QueueElem));
+        if (newArray == NULL) return QUEUE_NO_MEMORY;
+
+        queue->elements = newArray;
+        queue->capacity = newCapacity;
+    }
+
+    queue->rear = (queue->rear + 1) % queue->capacity;
+    queue->elements[queue->rear] = elem;
+    queue->size++;
+
+    return QUEUE_OK;
 }
 
-int queueDequeue(PtQueue queue, QueueElem *ptElem) { 
-	return -1;
+int queueDequeue(PtQueue queue, QueueElem *ptElem) {
+    if (queue == NULL) return QUEUE_NULL;
+
+    if (queue->size == 0) return QUEUE_EMPTY;
+
+    *ptElem = queue->elements[queue->front];
+    queue->front = (queue->front + 1) % queue->capacity;
+    queue->size--;
+
+    return QUEUE_OK;
 }
 
-int queueFront(PtQueue queue, QueueElem *ptElem) { 
-	return -1;
+int queueFront(PtQueue queue, QueueElem *ptElem) {
+    if (queue == NULL) return QUEUE_NULL;
+
+    if (queue->size == 0) return QUEUE_EMPTY;
+
+    *ptElem = queue->elements[queue->front];
+
+    return QUEUE_OK;
 }
 
 int queueSize(PtQueue queue, int *ptSize) {
@@ -109,4 +138,5 @@ void queuePrint(PtQueue queue) {
     }
     printf("\n");
 }
+
 
