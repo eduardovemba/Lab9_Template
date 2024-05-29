@@ -19,6 +19,26 @@
 #include <stdbool.h>
 #include "queueElem.h"
 
+#ifndef QUEUE_H
+#define QUEUE_H
+
+
+typedef int QueueElem;  // Tipo fictício para os elementos da fila
+
+typedef struct queueImpl* PtQueue;
+
+PtQueue queueCreate();
+int queueDestroy(PtQueue *ptQueue);
+int queueEnqueue(PtQueue queue, QueueElem elem);
+int queueDequeue(PtQueue queue, QueueElem *ptElem);
+int queueFront(PtQueue queue, QueueElem *ptElem);
+int queueSize(PtQueue queue, int *ptSize);
+bool queueIsEmpty(PtQueue queue);
+int queueClear(PtQueue queue);
+void queuePrint(PtQueue queue);
+
+#endif // QUEUE_H
+
 /** Forward declaration of the data structure. */
 struct queueImpl;
 
