@@ -68,9 +68,16 @@ int stackDestroy(PtStack *ptStack) {
 int stackPush(PtStack stack, StackElem elem) {
     if (stack == NULL) return STACK_NULL;
     
-    if(!ensureCapacity(stack)) return STACK_NO_MEMORY;    
+    if(!ensureCapacity(stack)) return STACK_NO_MEMORY;
 
-    // TODO
+    // Desloca os elementos para a direita
+    for (int i = stack->size; i > 0; i--) {
+        stack->elements[i] = stack->elements[i - 1];
+    }
+
+    // Insere o novo elemento no topo da pilha
+    stack->elements[0] = elem;
+    stack->size++;
 
     return STACK_OK;
 }
@@ -80,20 +87,30 @@ int stackPop(PtStack stack, StackElem *ptElem) {
 
     if (stack->size == 0) return STACK_EMPTY;
 
-    // TODO
+    // Pega o elemento do topo da pilha
+    *ptElem = stack->elements[0];
+
+    // Desloca os elementos para a esquerda
+    for (int i = 0; i < stack->size - 1; i++) {
+        stack->elements[i] = stack->elements[i + 1];
+    }
+
+    stack->size--;
 
     return STACK_OK;
 }
+
 
 int stackPeek(PtStack stack, StackElem *ptElem) {
     if (stack == NULL) return STACK_NULL;
 
     if (stack->size == 0) return STACK_EMPTY;
 
-    // TODO
+    *ptElem = stack->elements[0];
 
     return STACK_OK;
 }
+
 
 int stackSize(PtStack stack, int *ptSize) {
     if (stack == NULL) return STACK_NULL;
@@ -120,17 +137,17 @@ int stackClear(PtStack stack) {
 void stackPrint(PtStack stack) {
     if (stack == NULL) {
         printf("(Stack NULL)\n");
-    }
-    else if (stackIsEmpty(stack)) {
+    } else if (stackIsEmpty(stack)) {
         printf("(Stack Empty)\n");
-    }
-    else {
+    } else {
         printf("Stack contents (top to bottom): \n");
-    
-        // TODO - use `stackElemPrint`
-        
+        for (int i = 0; i < stack->size; i++) {
+            // Função fictícia para imprimir elementos da pilha
+            stackElemPrint(stack->elements[i]);
+        }
         printf("--- bottom --- \n");
     }
     printf("\n");
 }
+
 
