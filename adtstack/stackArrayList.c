@@ -68,15 +68,10 @@ int stackDestroy(PtStack *ptStack) {
 int stackPush(PtStack stack, StackElem elem) {
     if (stack == NULL) return STACK_NULL;
     
-    if(!ensureCapacity(stack)) return STACK_NO_MEMORY;
-
-    // Desloca os elementos para a direita
-    for (int i = stack->size; i > 0; i--) {
-        stack->elements[i] = stack->elements[i - 1];
-    }
+    if (!ensureCapacity(stack)) return STACK_NO_MEMORY;
 
     // Insere o novo elemento no topo da pilha
-    stack->elements[0] = elem;
+    stack->elements[stack->size] = elem;
     stack->size++;
 
     return STACK_OK;
@@ -88,13 +83,9 @@ int stackPop(PtStack stack, StackElem *ptElem) {
     if (stack->size == 0) return STACK_EMPTY;
 
     // Pega o elemento do topo da pilha
-    *ptElem = stack->elements[0];
+    *ptElem = stack->elements[stack->size - 1];
 
-    // Desloca os elementos para a esquerda
-    for (int i = 0; i < stack->size - 1; i++) {
-        stack->elements[i] = stack->elements[i + 1];
-    }
-
+    // Decrementa o tamanho da pilha
     stack->size--;
 
     return STACK_OK;
@@ -106,7 +97,7 @@ int stackPeek(PtStack stack, StackElem *ptElem) {
 
     if (stack->size == 0) return STACK_EMPTY;
 
-    *ptElem = stack->elements[0];
+    *ptElem = stack->elements[stack->size - 1];
 
     return STACK_OK;
 }
@@ -141,7 +132,7 @@ void stackPrint(PtStack stack) {
         printf("(Stack Empty)\n");
     } else {
         printf("Stack contents (top to bottom): \n");
-        for (int i = 0; i < stack->size; i++) {
+        for (int i = stack->size - 1; i >= 0; i--) {
             // Função fictícia para imprimir elementos da pilha
             stackElemPrint(stack->elements[i]);
         }
